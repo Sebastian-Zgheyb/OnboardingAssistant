@@ -20,7 +20,7 @@ modules:
 
     - key: onboarding-assistant
       name: Onboarding Assistant
-      description: Helps newcomers with their Jira onboarding tasks.
+      description: Helps all newcomers with their Jira onboarding tasks.
       prompt: >
         When a user asks to log a message, this action logs the message to the
         Forge logs.
@@ -63,3 +63,5 @@ permissions:
   scopes:
     - read:jira-work
     - read:jira-user
+    - search:confluence
+    - read:confluence-content.all
