@@ -1,5 +1,5 @@
 modules:
-  # Define the agent module for the conversational AI
+  # Define the agent module for RovoBuddy
   rovo:agent:
     - key: rovo-smart-agent
       name: RovoBuddy
@@ -18,7 +18,18 @@ modules:
       actions:
         - fetch-recommendations
 
-  # Define the action for fetching recommendations
+    - key: onboarding-assistant
+      name: Onboarding Assistant
+      description: Helps newcomers with their Jira onboarding tasks.
+      prompt: >
+        When a user asks to log a message, this action logs the message to the
+        Forge logs.
+      conversationStarters:
+        - "What's next?"
+      actions:
+        - onboarding-action
+
+  # Define actions for both bots
   action:
     - key: fetch-recommendations
       name: Fetch Recommendations
@@ -28,18 +39,27 @@ modules:
         Fetches the most relevant Jira tickets and Confluence pages based on priority 
         and recent activity.
 
-  # Define the function to handle recommendation logic
+    - key: onboarding-action
+      name: Fetch Next Tasks
+      function: onboarding-function
+      actionVerb: GET
+      description: >
+        Fetches the high-priority Jira tasks for onboarding users and provides the progress message.
+
+  # Define functions for both bots
   function:
     - key: fetchRecommendations
       handler: index.fetchRecommendations
 
+    - key: onboarding-function
+      handler: index.onboardingAssistant
+
 app:
   runtime:
     name: nodejs22.x
-  id: ari:cloud:ecosystem::app/73369cbb-feec-4359-a38d-4089fdbf0d0b
+  id: ari:cloud:ecosystem::app/73369cbb-feec-4359-a38d-4089fdbf0d0b  # Keep the correct app ID
+
 permissions:
   scopes:
     - read:jira-work
     - read:jira-user
-    # - read:confluence-content.summary
-    # - search:confluence
