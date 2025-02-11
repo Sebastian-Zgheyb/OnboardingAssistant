@@ -29,7 +29,7 @@ This feature ensures new hires stay on track and feel a sense of accomplishment 
 
 ---
 
-## **Confluence Project Summariser**
+## **InsightBot (Confluence Summariser)**
 
 ### **The Confluence Project Summariser** scans through all recently shared and commonly accessed projects of user’s, extracting key insights and eliminating the need to sift through lengthy documentation.
 
