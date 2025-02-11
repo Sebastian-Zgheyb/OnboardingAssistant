@@ -1,71 +1,98 @@
 modules:
+  # Define the agent module for RovoBuddy
   rovo:agent:
-      - key: onboarding-assistant
-        name: Onboarding Assistant
-        description: Helps newcomers with their Jira onboarding tasks.
-        prompt: >
-          When a user asks to log a message, this action logs the message to the
-          Forge logs.
-        conversationStarters:
-          - "What's next?"
-        actions:
-          - onboarding-action
+    - key: rovo-smart-agent
+      name: RovoBuddy
+      description: >
+        An AI-powered search and recommendation engine that fetches the most
+        relevant Jira tickets and Confluence pages, prioritizing high-priority items
+        and recently shared content.
+      prompt: >
+        You are an intelligent assistant that helps users find the most relevant Jira tickets 
+        and Confluence pages. Prioritize high-priority Jira tickets, recently shared items, 
+        and provide a summary of the results.
+      conversationStarters:
+        - Show me my highest priority Jira tickets
+        - Fetch recently shared Confluence pages
+        - Recommend relevant Jira issues and Confluence documents
+      actions:
+        - fetch-recommendations
 
-      - key: confluence-summary-agent
-        name: InsightBot 
-        description: A smart assistant that helps new team members get up to speed by introducing them to the team and summarizing ongoing projects in Confluence
-        prompt: >
-          You are an AI assistant designed to summarize Confluence pages. 
-          When provided with multiple pages' content, generate concise summaries of their main points.
+    - key: onboarding-assistant
+      name: Onboarding Assistant
+      description: Helps newcomers with their Jira onboarding tasks.
+      prompt: >
+        When a user asks to log a message, this action logs the message to the
+        Forge logs.
+      conversationStarters:
+        - "What's next?"
+      actions:
+        - onboarding-action
 
-          Instructions:
-            - When the user asks to "Introduce the team to me!":
-              1. Use the fetch-pages-action to fetch **all the pages** that contain 'Overview' in their title (e.g., 'John Doe Overview').
-                 Retrieving pages with 'Overview' in the title: By mentioning the word "Overview" explicitly, it ensures that only pages like "John Doe Overview" or "Jane Smith Overview" are retrieved.
-              2. Retrieve the content for each of these pages and summarize the key points (like the name, role, team, and location of the person).
-              3. if nothing is found, skip points 4, 5, and 6
-              4. Return a list of page summaries with relevant information.
-              5. Summarizing team members' information: The assistant will focus on names and relevant details such as roles, responsibilities, and achievements for each team member.
-              6. Handling multiple pages: The prompt implies that the assistant should retrieve multiple pages, summarizing each team member individually.
+    - key: confluence-summary-agent
+      name: InsightBot 
+      description: >
+        A smart assistant that helps new team members get up to speed by introducing them to the team 
+        and summarizing ongoing projects in Confluence.
+      prompt: >
+        You are an AI assistant designed to summarize Confluence pages. 
+        When provided with multiple pages' content, generate concise summaries of their main points.
 
+        Instructions:
+          - When the user asks to "Introduce the team to me!":
+            1. Use the fetch-pages-action to fetch **all the pages** that contain 'Overview' in their title 
+               (e.g., 'John Doe Overview').
+            2. Retrieve the content for each of these pages and summarize the key points (like the name, role, 
+               team, and location of the person).
+            3. If nothing is found, skip points 4, 5, and 6.
+            4. Return a list of page summaries with relevant information.
+            5. Summarizing team members' information: The assistant will focus on names and relevant details 
+               such as roles, responsibilities, and achievements for each team member.
+            6. Handling multiple pages: The assistant should retrieve multiple pages, summarizing each team 
+               member individually.
 
-            - When the user says "Summarize the project for me!":
-              1. Use the fetch-all-pages-action to fetch **all pages** in Confluence.
-              2. For each page, fetch the content and summarize the **main points** in a few sentences.
-                - Remove any placeholders like "Insert your email here" and irrelevant sections like "Recently Updated."
-                - Focus on the core content, such as team updates, project statuses, and important milestones.
-              3. Combine all the page summaries into a cohesive, concise overview of the project status, key updates, progress and people involved.
-              
-            Ensure the content is clean, relevant, and represents the most important aspects of each page.
+          - When the user says "Summarize the project for me!":
+            1. Use the fetch-all-pages-action to fetch **all pages** in Confluence.
+            2. For each page, fetch the content and summarize the **main points** in a few sentences.
+               - Remove any placeholders like "Insert your email here" and irrelevant sections like "Recently Updated."
+               - Focus on the core content, such as team updates, project statuses, and important milestones.
+            3. Combine all the page summaries into a cohesive, concise overview of the project status, key updates, 
+               progress, and people involved.
 
-        conversationStarters:
-          - "Introduce the team to me!"
-          - "Summarise the project for me!"
+        Ensure the content is clean, relevant, and represents the most important aspects of each page.
 
+      conversationStarters:
+        - "Introduce the team to me!"
+        - "Summarize the project for me!"
+      actions:
+        - summary-action
+        - summary-all-action
+        - fetch-pages-action
+        - fetch-all-pages-action
 
-        actions:
-          - summary-action
-          - summary-all-action
-          - fetch-pages-action
-          - fetch-all-pages-action
-  
-
-
-  
+  # Define actions for all agents
   action:
+    - key: fetch-recommendations
+      name: Fetch Recommendations
+      function: fetchRecommendations
+      actionVerb: GET
+      description: >
+        Fetches the most relevant Jira tickets and Confluence pages based on priority 
+        and recent activity.
+
     - key: onboarding-action
       name: Fetch Next Tasks
-      function: onboarding-function # Match with a function module key
-      actionVerb: GET  # Keep as GET if it only retrieves data
+      function: onboarding-function
+      actionVerb: GET
       description: >
-        Fetches the high-priority Jira tasks for onboarding user and provides the progress message.
+        Fetches the high-priority Jira tasks for onboarding users and provides the progress message.
 
     - key: summary-action
       name: Get Summary
-      function: summary-function # Match with a function module key
-      actionVerb: GET  # Keep as GET if it only retrieves data
+      function: summary-function
+      actionVerb: GET
       description: >
-        Summarizes the content of a Confluence overview pages of the team member.
+        Summarizes the content of a Confluence overview page of a team member.
       inputs:
         pageId:
           title: Page ID
@@ -74,34 +101,31 @@ modules:
           required: true
 
     - key: summary-all-action
-      name: Get Summary
-      function: summary-all-function # Match with a function module key
-      actionVerb: GET  # Keep as GET if it only retrieves data
+      name: Get Summary (All)
+      function: summary-all-function
+      actionVerb: GET
       description: >
-        Summarizes the content of ALL of the Confluence pages.
-      inputs:
-        pageId:
-          title: Page ID
-          type: number
-          description: The page id of the page to fetch
-          required: true
+        Summarizes the content of ALL Confluence pages.
 
     - key: fetch-pages-action
-      name: Fetch Pages
+      name: Fetch Overview Pages
       function: fetchAllPages
       actionVerb: GET
       description: >
-        Fetches the pages with 'Overview' in it
-      
+        Fetches Confluence pages with 'Overview' in the title.
+
     - key: fetch-all-pages-action
       name: Fetch All Pages
       function: fetch-pages
       actionVerb: GET
       description: >
-        Fetches ALL the pages in Confluence.
+        Fetches ALL pages in Confluence.
 
-
+  # Define functions for all agents
   function:
+    - key: fetchRecommendations
+      handler: index.fetchRecommendations
+
     - key: onboarding-function
       handler: index.onboardingAssistant
     
@@ -120,7 +144,7 @@ modules:
 app:
   runtime:
     name: nodejs22.x
-  id: ari:cloud:ecosystem::app/93141e9e-f62c-4efe-b10d-2ba9bfd2d9c1
+  id: ari:cloud:ecosystem::app/73369cbb-feec-4359-a38d-4089fdbf0d0b  # Keep the correct app ID
 
 permissions:
   scopes:
