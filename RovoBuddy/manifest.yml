@@ -1,26 +1,55 @@
 modules:
+  # Define the agent module for RovoBuddy
   rovo:agent:
-      - key: onboarding-assistant
-        name: Onboarding Assistant
-        description: Helps newcomers with their Jira onboarding tasks.
-        prompt: >
-          When a user asks to log a message, this action logs the message to the
-          Forge logs.
-        conversationStarters:
-          - "What's next?"
-        actions:
-          - onboarding-action
+    - key: rovo-smart-agent
+      name: RovoBuddy
+      description: >
+        An AI-powered search and recommendation engine that fetches the most
+        relevant Jira tickets and Confluence pages, prioritizing high-priority items
+        and recently shared content.
+      prompt: >
+        You are an intelligent assistant that helps users find the most relevant Jira tickets 
+        and Confluence pages. Prioritize high-priority Jira tickets, recently shared items, 
+        and provide a summary of the results.
+      conversationStarters:
+        - Show me my highest priority Jira tickets
+        - Fetch recently shared Confluence pages
+        - Recommend relevant Jira issues and Confluence documents
+      actions:
+        - fetch-recommendations
 
+    - key: onboarding-assistant
+      name: Onboarding Assistant
+      description: Helps newcomers with their Jira onboarding tasks.
+      prompt: >
+        When a user asks to log a message, this action logs the message to the
+        Forge logs.
+      conversationStarters:
+        - "What's next?"
+      actions:
+        - onboarding-action
+
+  # Define actions for both bots
   action:
+    - key: fetch-recommendations
+      name: Fetch Recommendations
+      function: fetchRecommendations
+      actionVerb: GET
+      description: >
+        Fetches the most relevant Jira tickets and Confluence pages based on priority 
+        and recent activity.
 
     - key: onboarding-action
       name: Fetch Next Tasks
-      function: onboarding-function # Match with a function module key
-      actionVerb: GET  # Keep as GET if it only retrieves data
+      function: onboarding-function
+      actionVerb: GET
       description: >
-        Fetches the high-priority Jira tasks for onboarding user and provides the progress message.
+        Fetches the high-priority Jira tasks for onboarding users and provides the progress message.
 
+  # Define functions for both bots
   function:
+    - key: fetchRecommendations
+      handler: index.fetchRecommendations
 
     - key: onboarding-function
       handler: index.onboardingAssistant
@@ -28,10 +57,9 @@ modules:
 app:
   runtime:
     name: nodejs22.x
-  id: ari:cloud:ecosystem::app/93141e9e-f62c-4efe-b10d-2ba9bfd2d9c1
+  id: ari:cloud:ecosystem::app/73369cbb-feec-4359-a38d-4089fdbf0d0b  # Keep the correct app ID
 
 permissions:
   scopes:
     - read:jira-work
     - read:jira-user
-
