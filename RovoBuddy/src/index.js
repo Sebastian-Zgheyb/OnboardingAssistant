@@ -136,3 +136,115 @@ function formatResponse(appreciationMessage, issues) {
   return `${appreciationMessage}\n\nHere are your next high-priority tasks:\n${issueList}`;
 }
 
+
+//Marvin's part
+export async function summaryAgentHandler(event) {
+  const { pageId } = event; 
+  console.log('pageId', pageId);
+  console.log(JSON.stringify(event, null, 2));
+
+  try {
+    // Fetch the Confluence page content
+    const response = await api.asApp().requestConfluence(route`/wiki/api/v2/pages/${pageId}?body-format=storage`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch page. Status code: ${response.status}`);
+    }
+
+    // Parse the page content
+    const pageData = await response.json();
+    console.log('Page data:', JSON.stringify(pageData, null, 2));
+
+    // Extract pageBody from the response
+    const pageBody = pageData.body;
+
+    // Return the raw page body
+    if (pageBody == undefined) {
+      return "No content found for this page.";
+    }
+
+    return pageBody;  // Returning the page body without any summarization
+
+  } catch (error) {
+    console.error("Error fetching Confluence page:", error);
+    return "Sorry, I couldn't fetch the page content. Please try again later.";
+  }
+}
+
+export async function summaryAllAgentHandler(event) {
+  const { pageId } = event; 
+  console.log('pageId', pageId);
+  console.log(JSON.stringify(event, null, 2));
+
+  try {
+    // Fetch the Confluence page content using Forge API.
+    const response = await api.asApp().requestConfluence(route`/wiki/api/v2/pages/${pageId}?body-format=storage`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+  
+    if (!response.ok) {
+      throw new Error(`Failed to fetch page. Status code: ${response.status}`);
+    }
+
+    
+    const pageData = await response.json(); 
+    console.log('body', JSON.stringify(pageData, null, 2));
+    const pageTitle = pageData.title;
+    const pageBody = pageData.body;
+    if (pageBody == undefined){
+      return "No Summary found";
+    }
+
+    return pageBody;
+
+  } catch (error) {
+    console.error("Error summarizing project:", error);
+    return "An error occurred while summarizing the project.";
+  }
+}
+
+export async function fetchPages(){
+  try {
+    const response = await api.asApp().requestConfluence(route`/wiki/api/v2/pages`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch pages. Status code: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching all Confluence pages:", error);
+    return [];
+  }
+}
+
+export async function fetchAllPages() {
+  try {
+    const response = await api.asApp().requestConfluence(route`/wiki/api/v2/pages`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch pages. Status code: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching all Confluence pages:", error);
+    return [];
+  }
+}
+
