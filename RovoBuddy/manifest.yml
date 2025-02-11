@@ -1,38 +1,45 @@
 modules:
+  # Define the agent module for the conversational AI
   rovo:agent:
-    - key: rovobuddy-hello-world-agent
+    - key: rovo-smart-agent
       name: RovoBuddy
-      description: An agent for testing Forge agent functionality
+      description: >
+        An AI-powered search and recommendation engine that fetches the most
+        relevant Jira tickets and Confluence pages, prioritizing high-priority items
+        and recently shared content.
       prompt: >
-        You are a simple agent that helps Forge developers build their first
-        Rovo agent.
-
-        You can create Forge logs by using the hello-world-logger action.
-
-        If the user hasn't provided a message when they ask you to create a log ask them to provide one.
+        You are an intelligent assistant that helps users find the most relevant Jira tickets 
+        and Confluence pages. Prioritize high-priority Jira tickets, recently shared items, 
+        and provide a summary of the results.
       conversationStarters:
-        - Log a message to Forge logs
+        - Show me my highest priority Jira tickets
+        - Fetch recently shared Confluence pages
+        - Recommend relevant Jira issues and Confluence documents
       actions:
-        - hello-world-logger
+        - fetch-recommendations
+
+  # Define the action for fetching recommendations
   action:
-    - key: hello-world-logger
-      name: Log a message
-      function: messageLogger
+    - key: fetch-recommendations
+      name: Fetch Recommendations
+      function: fetchRecommendations
       actionVerb: GET
       description: >
-        When a user asks to log a message, this action logs the message to the
-        Forge logs.
-      inputs:
-        message:
-          title: Message
-          type: string
-          required: true
-          description: |
-            "The message that the user has requested be logged to Forge logs"
+        Fetches the most relevant Jira tickets and Confluence pages based on priority 
+        and recent activity.
+
+  # Define the function to handle recommendation logic
   function:
-    - key: messageLogger
-      handler: index.messageLogger
+    - key: fetchRecommendations
+      handler: index.fetchRecommendations
+
 app:
   runtime:
     name: nodejs22.x
-  id: ari:cloud:ecosystem::app/93141e9e-f62c-4efe-b10d-2ba9bfd2d9c1
+  id: ari:cloud:ecosystem::app/73369cbb-feec-4359-a38d-4089fdbf0d0b
+permissions:
+  scopes:
+    - read:jira-work
+    - read:jira-user
+    # - read:confluence-content.summary
+    # - search:confluence
