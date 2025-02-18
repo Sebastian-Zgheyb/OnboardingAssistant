@@ -1,6 +1,6 @@
 # **Smart Onboarding Assistant**
 
-Welcome to the **Smart Onboarding Assistant** repository! This project is an AI-powered tool designed to streamline and enhance the onboarding experience for new hires. By providing personalized guidance, contextual recommendations, and intelligent search capabilities, the **Smart Onboarding Assistant** ensures any new team members can quickly become productive and engaged.
+Welcome to the **Smart Onboarding Assistant** repository! This project is an AI-powered tool designed to streamline and enhance the onboarding experience for new hires. By providing personalised guidance, contextual recommendations, and intelligent search capabilities, the **Smart Onboarding Assistant** ensures any new team members can quickly become productive and engaged.
 
 ---
 
@@ -57,7 +57,7 @@ This feature ensures new hires stay on track and feel a sense of accomplishment 
 ### **Installation**
 
 1. Clone the repository
-   `git clone https://github.com/ManavBijlani21/ForgeHack-Team4.git`
+   `git clone https://github.com/Sebastian-Zgheyb/OnboardingAssistant.git`
 
 2. Run the following command
    `forge deploy`
@@ -69,15 +69,15 @@ This feature ensures new hires stay on track and feel a sense of accomplishment 
 
 #### For **Jira**:
 
-1. Go to your Jira project
-2. Select the **Chat** button, click on the drop down
-3. In the drop down, look for your deployed Agent. If not, select **Browse Agents**
-4. Look for **Onboarding Assistant** by RovoBuddy
+1. Go to your Jira project.
+2. Select the **Chat** button, click on the drop down.
+3. In the drop down, look for your deployed Agent. If not, select **Browse Agents**.
+4. Look for **Onboarding Assistant** by RovoBuddy.
 5. Start asking the **Onboarding Assistant** any questions you have regarding the Onboarding process!
 
-#### For **Cofluence**:
+#### For **Confluence**:
 
-1. At the top Cofluence navigation bar, select the **Chat** button then click on the drop down
-2. In the drop down, look for your deployed Agent. If not, select **Browse Agents**
-3. Look for **Insight Bot** by RovoBuddy
+1. At the top Confluence navigation bar, select the **Chat** button then click on the drop down.
+2. In the drop down, look for your deployed Agent. If not, select **Browse Agents**.
+3. Look for **Insight Bot** by RovoBuddy.
 4. Start asking the **Insight Bot** any questions you have regarding the team and projects!
